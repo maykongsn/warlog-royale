@@ -1,0 +1,19 @@
+{
+  "name": "warlog-royale",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/maykongsn/warlog-royale.git",
+  "author": "maykon",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
