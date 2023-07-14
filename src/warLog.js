@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const axios = require('axios');
+const { Router } = require("express");
+const axios = require("axios");
 
 const router = Router();
 
@@ -11,38 +11,38 @@ router.get("/", async (req, res) => {
       },
     };
 
-    const participants = await axios.get(
-      "https://api.clashroyale.com/v1/clans/CLANTAG/currentwar",
+    const warParticipants = await axios.get(
+      `https://api.clashroyale.com/v1/clans/%23VGLQC02/currentriverrace`,
       config
     );
 
-    const members = await axios.get(
-      "https://api.clashroyale.com/v1/clans/CLANTAG/members",
+    const clanMembers = await axios.get(
+      "https://api.clashroyale.com/v1/clans/%23VGLQC02/members",
       config
     );
 
-    var participantsName = [];
-    for(var i = 0; i < participants.data.participants.length; i++) {
-      participantsName.push(participants.data.participants[i].name);
-    }
+    const participantsName = warParticipants.data.clan.participants.reduce(
+      (participants, member) => {
+        if (member.fame === 0) {
+          participants.push(member.name);
+        }
+        return participants;
+      },
+      []
+    );
 
-    var membersName = [];
-    for(var i = 0; i < members.data.items.length; i++) {
-      if(members.data.items[i].expLevel >= 8) {
-        membersName.push(members.data.items[i].name);
+    const membersName = clanMembers.data.items.map((member) => member.name);
+
+    const notParticipating = participantsName.reduce((participants, member) => {
+      if (membersName.indexOf(member) > -1) {
+        participants.push(member);
       }
-    }
-    
-    var notParticipating = [];
-    for(var i = 0; i < membersName.length; i++) {
-      if(participantsName.indexOf(membersName[i]) == -1) {
-        notParticipating.push(membersName[i]);
-      }
-    }
-    console.log(notParticipating);
+      return participants;
+    }, []);
+
     res.json(notParticipating);
   } catch (error) {
-    console.error(error.message);
+    res.error(error.message);
   }
 });
 
